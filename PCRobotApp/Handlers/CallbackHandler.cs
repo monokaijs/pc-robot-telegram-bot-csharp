@@ -40,12 +40,12 @@ public class CallbackHandler
                 }
                 else
                 {
-                    await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "Unknown action.");
+                    await _botClient.AnswerCallbackQuery(callbackQuery.Id, "Unknown action.");
                 }
             }
             else
             {
-                await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "Access denied.");
+                await _botClient.AnswerCallbackQuery(callbackQuery.Id, "Access denied.");
             }
 
             return;
