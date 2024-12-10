@@ -32,7 +32,7 @@ jobs:
     - name: Archive the executable
       run: |
         mkdir -p artifacts
-        cp ./[ProjectFolderName]/bin/Release/net9.0-windows/win-x64/publish/*.exe artifacts/
+        cp ./PCRobotApp/bin/Release/net9.0-windows/win-x64/publish/*.exe artifacts/
 
     # Upload the artifact to the GitHub Release
     - name: Create Release and Upload Artifact
