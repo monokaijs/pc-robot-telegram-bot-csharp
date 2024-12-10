@@ -3,7 +3,7 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*' # Trigger only on version tags (e.g., v1.0.0)
 
 jobs:
   build:
@@ -14,30 +14,30 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Setup .NET environment
+    # Setup .NET environment for .NET 9
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '9.0.x' # Replace with the version you're targeting
+        dotnet-version: '9.0.x' # Ensure .NET 9 is used
 
     # Restore dependencies
     - name: Restore dependencies
       run: dotnet restore
 
-    # Build and publish the application
+    # Build and publish the project to a single executable
     - name: Build and publish
       run: dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
 
-    # Archive the build artifact
-    - name: Archive build artifacts
+    # Archive the built executable
+    - name: Archive the executable
       run: |
         mkdir -p artifacts
-        cp bin/Release/net9.0-windows/win-x64/publish/*.exe artifacts/
+        cp ./[ProjectFolderName]/bin/Release/net9.0-windows/win-x64/publish/*.exe artifacts/
 
-    # Upload the artifact to GitHub Release
+    # Upload the artifact to the GitHub Release
     - name: Create Release and Upload Artifact
       uses: softprops/action-gh-release@v1
       with:
         files: artifacts/*.exe
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub Actions
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
