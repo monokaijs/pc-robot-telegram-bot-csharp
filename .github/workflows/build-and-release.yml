@@ -1,0 +1,43 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Setup .NET environment
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.0.x' # Replace with the version you're targeting
+
+    # Restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # Build and publish the application
+    - name: Build and publish
+      run: dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+
+    # Archive the build artifact
+    - name: Archive build artifacts
+      run: |
+        mkdir -p artifacts
+        cp bin/Release/net9.0-windows/win-x64/publish/*.exe artifacts/
+
+    # Upload the artifact to GitHub Release
+    - name: Create Release and Upload Artifact
+      uses: softprops/action-gh-release@v1
+      with:
+        files: artifacts/*.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub Actions
